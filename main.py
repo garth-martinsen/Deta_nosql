@@ -2,14 +2,13 @@
 from deta import Deta  # Import Deta
 from fastapi import FastAPI
 
-# Initialize with a Project Key unless detabase is within a micro-- then automatic
-# deta = Deta("project key")
-deta = Deta()
-# This how to connect to or create a database.
+# If detabase is within a micro-- Project Key is automatic
+deta = Deta("project key")
+# deta = Deta()
+# to connect to or create a database.
 db = deta.Base("pins")
 
-# You can create as many db's as you want without additional charges.
-# books = deta.Base("books")
+# Models
 
 
 class PinsIn(BaseModel):
@@ -21,7 +20,7 @@ class PinsIn(BaseModel):
 
 
 class Pins(PinsIn):
-    id: int
+    id: str   # in Deta nosql, id is a str
 
 
 app = FastAPI()
@@ -33,7 +32,7 @@ def read_root():
 
 
 @app.get("/items/{item_id}")
-def read_item(item_id: int):
+def read_item(item_id: str):
     return {"item_id": item_id}
 
 
