@@ -1,1 +1,10 @@
+venv
+useful_info.txt
+.deta/
 *~
+.env
+.DS_Store
+__pycache__/
+data/
+micro_nosql.sublime-project
+micro_nosql.sublime-workspace
