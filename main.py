@@ -1,14 +1,15 @@
 #  file: main.py
 from deta import Deta  # Import Deta
 from fastapi import FastAPI
+from pydantic import BaseModel
 
-# If detabase is within a micro-- Project Key is automatic
-deta = Deta("project key")
-# deta = Deta()
+# If detabase is within a micro-- Projedeta = Deta("project key")
+deta = Deta()
 # to connect to or create a database.
 db = deta.Base("pins")
+app = FastAPI()
 
-# Models
+"""Models"""
 
 
 class PinsIn(BaseModel):
@@ -20,10 +21,10 @@ class PinsIn(BaseModel):
 
 
 class Pins(PinsIn):
-    id: str   # in Deta nosql, id is a str
+    key: str   # in Deta nosql, key is a str
 
 
-app = FastAPI()
+"""Routes"""
 
 
 @app.get("/")
@@ -31,12 +32,19 @@ def read_root():
     return {"Testing": "NoSQL_Pins"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: str):
-    return {"item_id": item_id}
+@app.get("/pins")
+def read_pins():
+    respns = db.fetch({})
+    return respns
 
 
-@app.post("/pins", response_model=Pins)
+@app.get("/pin/{pin_id}")
+def read_pin(pin_id: str):
+    respns = db.get(pin_id)
+    return respns
+
+
+@app.post("/pins/", response_model=Pins)
 async def create_pins(pns: PinsIn):
     rspns = db.put({"ts": pns.ts, "src": pns.src,
                     "D2": pns.D2, "D3": pns.D3, "A1": pns.A1})
